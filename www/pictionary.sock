@@ -1,0 +1,23 @@
+import random
+
+
+
+if not hasattr(socket, 'color'):
+    socket.color = [random.int(256) for i in range(3)]
+    print socket.color
+
+message = socket.recv()
+
+event = message['name']
+data = message['args']
+
+assert event in ['draw-coords', 'clear']
+
+if event == 'draw-coords':
+    data = data[0]
+    data['color'] = socket.color
+    out = {'name': 'draw', 'args': data}
+elif event == 'clear':
+    out = {'name': 'clear', 'args': {}}
+
+channel.send_event(out)
