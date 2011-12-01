@@ -1,16 +1,15 @@
 # This runs the first time the file is hit by anyone.
 import random
 
-def get_color():
-    ints = [random.randint(0, 255) for i in range(3)]
-    hex_ = [hex(i)[2:4].upper().zfill(2) for i in ints]
-    return ''.join(hex_)
+def random_color():
+    x = hex(random.randint(0, 0xFFFFFF)) # e.g., "0xd7e919" or "0xf70c"
+    return x[2:].upper().zfill(6)        # e.g., "D7E919" or "00F70C"
 
 
 ^L
 # This runs once per client, when they first connect.
 
-socket.color = get_color()
+socket.color = random_color()
 
 
 ^L
