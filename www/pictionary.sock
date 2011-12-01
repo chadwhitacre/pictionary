@@ -1,3 +1,4 @@
+#!/bin/python
 # This runs the first time the file is hit by anyone.
 import random
 
