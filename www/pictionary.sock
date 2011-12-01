@@ -1,9 +1,14 @@
 import random
 
+def get_color():
+    ints = [random.randint(0, 255) for i in range(3)]
+    hex_ = [hex(i)[2:4].upper().zfill(2) for i in ints]
+    return ''.join(hex_)
+
 
 
 if not hasattr(socket, 'color'):
-    socket.color = [random.int(256) for i in range(3)]
+    socket.color = get_color()
     print socket.color
 
 message = socket.recv()

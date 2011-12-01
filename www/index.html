@@ -38,7 +38,7 @@
                       return [curleft,curtop];
                 };
 
-                function drawit(point1, point2, from_socket){
+                function drawit(point1, point2, color, from_socket){
                     //uses global var context which is the canvas context('2d')
                     //point1 and point2 are arrays representing an x,y coordinate
                     //use the canvas to draw from point1 to point2
@@ -47,6 +47,7 @@
                     context.beginPath();
                     context.moveTo(point1[0], point1[1]);
                     context.lineTo(point2[0], point2[1]);
+                    context.strokeStyle = '#'+color;
                     context.stroke();
                     if(!from_socket){
                         socket.emit('draw-coords', {point1: point1, point2:point2});
@@ -59,7 +60,6 @@
                     drawing_var.width = 0;
                     drawing_var.width = temp;
                     context = drawing_var.getContext("2d");
-                    context.strokeStyle = '#000000';
                     context.lineWidth = 5;
                     context.lineCap = 'round';
                     if(!from_socket){
@@ -88,8 +88,9 @@
                     draw = true;
                     point1 = [e.pageX - draw_area_offset[0], e.pageY - draw_area_offset[1]];
                     point2 = [e.pageX - draw_area_offset[0]+1, e.pageY - draw_area_offset[1]];
+                    color = '000000';
                     last_point = point1;
-                    drawit(point1, point2, false);
+                    drawit(point1, point2, color, false);
                 });
                 $('#drawing-area').mousemove(function(e){
                     //we use the last_point for point1 (set with mousedown event)
@@ -98,7 +99,8 @@
                     if(draw){
                         point1 = last_point; 
                         point2 = [e.pageX - draw_area_offset[0], e.pageY - draw_area_offset[1]];
-                        drawit(point1, point2, false);
+                        color = '000000';
+                        drawit(point1, point2, color, false);
                         last_point = point2;
                     }
                 });
@@ -118,7 +120,8 @@
                 socket.on('draw', function(data){
                     point1 = [data['point1'][0], data['point1'][1]];
                     point2 = [data['point2'][0], data['point2'][1]];
-                    drawit(point1, point2, true);
+                    color = data['color'];
+                    drawit(point1, point2, color, true);
                 });
 
                 //websocket event to clear the 
