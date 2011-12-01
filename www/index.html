@@ -50,7 +50,7 @@
                     context.strokeStyle = '#'+color;
                     context.stroke();
                     if(!from_socket){
-                        socket.emit('draw-coords', {point1: point1, point2:point2});
+                        socket.emit('draw-coords', point1, point2);
                     }
                     return;
                 };
@@ -116,13 +116,8 @@
                 });
 
                 //websocket event, receive data which contains 2 points
-                //data = {poin1: [x, y], point2: [x,y]}
-                socket.on('draw', function(data){
-                    point1 = [data['point1'][0], data['point1'][1]];
-                    point2 = [data['point2'][0], data['point2'][1]];
-                    color = data['color'];
-                    drawit(point1, point2, color, true);
-                });
+                //points = {point1: [x, y], point2: [x,y]}
+                socket.on('draw', drawit)
 
                 //websocket event to clear the 
                 socket.on('clear', function(data){

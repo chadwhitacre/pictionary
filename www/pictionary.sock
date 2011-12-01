@@ -1,3 +1,4 @@
+# This runs the first time the file is hit by anyone.
 import random
 
 def get_color():
@@ -5,24 +6,21 @@ def get_color():
     hex_ = [hex(i)[2:4].upper().zfill(2) for i in ints]
     return ''.join(hex_)
 
-
 
-if not hasattr(socket, 'color'):
-    socket.color = get_color()
-    print socket.color
+^L
+# This runs once per client, when they first connect.
 
-message = socket.recv()
+socket.color = get_color()
 
-event = message['name']
-data = message['args']
 
-assert event in ['draw-coords', 'clear']
+^L
+# This runs in a loop per client, as long as they're connected.
+
+event, args = socket.listen('clear', 'draw-coords')
+
+if event == 'clear':
+    channel.notify('clear')
 
 if event == 'draw-coords':
-    data = data[0]
-    data['color'] = socket.color
-    out = {'name': 'draw', 'args': data}
-elif event == 'clear':
-    out = {'name': 'clear', 'args': {}}
-
-channel.send_event(out)
+    point1, point2 = args
+    channel.notify('draw', point1, point2, socket.color, True)
