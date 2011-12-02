@@ -1,10 +1,22 @@
 # This runs the first time the file is hit by anyone.
 import random
 
-def random_color():
-    x = hex(random.randint(0, 0xFFFFFF)) # e.g., "0xd7e919" or "0xf70c"
-    return x[2:].upper().zfill(6)        # e.g., "D7E919" or "00F70C"
+#these are the color options
+colors_cached = (0xFF0000, 0x00FF00, 0x0000FF, 0x00FFFF, 
+                 0xFFFF00, 0xFFCC00, 0x000000, 0x990000, 
+                 0x009900, 0x000099, 0x009999, 0x009999, 
+                 0x999900, 0x99CC00)
+socket_colors = list(colors_cached)
+random.shuffle(socket_colors)
 
+#pick a random color but don't allow 'collisions' until
+#all available colors have been exhausted
+def random_color():
+    global socket_colors
+    if not len(socket_colors):
+        socket_colors = list(colors_cached)
+        random.shuffle(socket_colors)
+    return hex(socket_colors.pop())[2:].upper().zfill(6)
 
 ^L
 # This runs once per client, when they first connect.
